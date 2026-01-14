@@ -1,0 +1,12 @@
+# Exclude local dev artifacts
+.venv
+__pycache__
+*.pyc
+*.log
+.git
+
+# Exclude local DB if you don't want it in image
+# data/db.pkl
+
+# OS/editor files
+.DS_Store

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Face Recognition Sederhana</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Face Recognition (InsightFace)</h1>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flash">
+            {% for msg in messages %}
+            <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <section>
+            <h2>Daftarkan Wajah</h2>
+            <form action="/enroll" method="post" enctype="multipart/form-data">
+                <label>Nama:</label>
+                <input type="text" name="name" required />
+                <label>Gambar Wajah:</label>
+                <input type="file" name="image" accept="image/*" required />
+                <button type="submit">Daftarkan</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Kenali Wajah</h2>
+            <form action="/recognize" method="post" enctype="multipart/form-data">
+                <label>Threshold (kemiripan, default 0.35):</label>
+                <input type="number" name="threshold" step="0.01" min="0" max="1" value="{{ threshold or 0.35 }}" />
+                <label>Gambar:</label>
+                <input type="file" name="image" accept="image/*" required />
+                <button type="submit">Kenali</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Data Tersimpan</h2>
+            {% if enrolled_names and enrolled_names|length > 0 %}
+            <ul>
+                {% for n in enrolled_names %}
+                <li>{{ n }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Belum ada data wajah terdaftar.</p>
+            {% endif %}
+        </section>
+
+        {% if results is not none %}
+        <section>
+            <h2>Hasil Pengenalan</h2>
+            {% if results|length == 0 %}
+            <p>Tidak ada wajah terdeteksi.</p>
+            {% else %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kotak Wajah</th>
+                        <th>Skor</th>
+                        <th>Hasil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                    <tr>
+                        <td>[{{ r.bbox[0] }}, {{ r.bbox[1] }}, {{ r.bbox[2] }}, {{ r.bbox[3] }}]</td>
+                        <td>{{ r.score }}</td>
+                        <td>{{ r.match }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </section>
+        {% endif %}
+    </div>
+</body>
+
+</html>
