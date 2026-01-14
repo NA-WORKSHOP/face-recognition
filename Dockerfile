@@ -1,5 +1,6 @@
 # Minimal CPU-only InsightFace Flask app
-FROM python:3.10-slim
+# Use Amazon ECR Public mirror for Docker Official Images to avoid Hub DNS issues
+FROM public.ecr.aws/docker/library/python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
