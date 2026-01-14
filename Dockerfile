@@ -9,10 +9,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# System deps for opencv headless and runtime
+# System deps for OpenCV headless and build tools (ARM/aarch64 needs g++)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
+    build-essential \
+    cmake \
+    pkg-config \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
